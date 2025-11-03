@@ -445,25 +445,10 @@ db.close()
 - [ ] Kubernetes deployment
 - [ ] REST API authentication
 
-## Contributing
 
-Contributions are welcome! Please:
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
 
 ## License
 
 MIT License - See LICENSE file for details
 
-## Support
 
-For issues or questions:
-1. Check the troubleshooting section
-2. Review the logs in `data/app.log`
-3. Open an issue with detailed information
-
-## Disclaimer
-
-This tool is for educational and research purposes. It is not financial advice. Always conduct thorough testing and risk management before deploying any trading strategy. Past performance does not guarantee future results.
