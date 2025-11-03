@@ -1,6 +1,9 @@
 # Quant Trading Dashboard
 
 A comprehensive quantitative trading analytics platform that ingests real-time market data from Binance, performs advanced statistical analysis, and provides interactive visualizations for pair trading and statistical arbitrage strategies.
+## DEMO VIDEO LINK : 
+**Click the link below to see a quick demonstration of how the project works**.
+**Link**: https://drive.google.com/file/d/1lpzIAI2BmzfQGTksZPqAqnS6iCdjlDad/view?usp=sharing
 
 ## Features
 
@@ -137,7 +140,7 @@ cd ..
 
 ## Running the Application
 
-### Option 1: Run Both Backend and Frontend (Recommended)
+### Option 1: Run Both Backend and Frontend 
 
 **Terminal 1 - Start Backend Server**:
 ```bash
