@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: quant-trading-dashboard
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT backend.main:app
+    
+    # Environment variables
+    envVars:
+      - key: DATABASE_URL
+        scope: build
+        value: sqlite:///data/trading_data.db
+      - key: BINANCE_WS_URL
+        scope: build
+        value: wss://fstream.binance.com/ws/
+      - key: DEFAULT_SYMBOLS
+        scope: build
+        value: btcusdt,ethusdt,bnbusdt
+      - key: API_HOST
+        scope: build
+        value: 0.0.0.0
+      - key: API_PORT
+        scope: build
+        value: "8000"
+      - key: LOG_LEVEL
+        scope: build
+        value: INFO
+      - key: PYTHONUNBUFFERED
+        scope: build
+        value: "1"
+    
+    # Disk for persistent storage
+    disk:
+      name: data
+      mountPath: /app/backend/data
+      sizeGB: 1

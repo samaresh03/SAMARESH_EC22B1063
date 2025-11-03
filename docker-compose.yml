@@ -1,0 +1,117 @@
+version: '3.8'
+
+services:
+  quant-dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: quant-dashboard
+    ports:
+      - "8000:8000"
+      - "8501:8501"
+    volumes:
+      - quant-data:/app/backend/data
+      - quant-logs:/app/backend/logs
+    environment:
+      # Database Configuration
+      - DATABASE_URL=sqlite:///data/trading_data.db
+      # For PostgreSQL: postgresql://user:password@db:5432/quant_trading
+      
+      # Binance WebSocket Configuration
+      - BINANCE_WS_URL=wss://fstream.binance.com/ws/
+      - DEFAULT_SYMBOLS=btcusdt,ethusdt,bnbusdt
+      
+      # API Configuration
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - API_RELOAD=false
+      - API_LOG_LEVEL=info
+      
+      # Frontend Configuration
+      - FRONTEND_PORT=8501
+      - STREAMLIT_SERVER_HEADLESS=true
+      
+      # Analytics Configuration
+      - DEFAULT_TIMEFRAME=1m
+      - ZSCORE_WINDOW=20
+      - CORRELATION_WINDOW=30
+      - ADF_MAX_LAG=5
+      
+      # Logging Configuration
+      - LOG_LEVEL=INFO
+      - LOG_FILE=/app/backend/data/app.log
+    
+    restart: unless-stopped
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    networks:
+      - quant-network
+    
+    # Resource limits (optional)
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '2'
+    #       memory: 4G
+    #     reservations:
+    #       cpus: '1'
+    #       memory: 2G
+
+  # Optional: PostgreSQL database for production
+  # postgres:
+  #   image: postgres:13-alpine
+  #   container_name: quant-postgres
+  #   environment:
+  #     POSTGRES_USER: quant_user
+  #     POSTGRES_PASSWORD: your_secure_password
+  #     POSTGRES_DB: quant_trading
+  #   volumes:
+  #     - postgres-data:/var/lib/postgresql/data
+  #   ports:
+  #     - "5432:5432"
+  #   networks:
+  #     - quant-network
+  #   restart: unless-stopped
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U quant_user"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+  # Optional: Redis cache for production
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: quant-redis
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - redis-data:/data
+  #   networks:
+  #     - quant-network
+  #   restart: unless-stopped
+  #   command: redis-server --appendonly yes
+  #   healthcheck:
+  #     test: ["CMD", "redis-cli", "ping"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+volumes:
+  quant-data:
+    driver: local
+  quant-logs:
+    driver: local
+  # postgres-data:
+  #   driver: local
+  # redis-data:
+  #   driver: local
+
+networks:
+  quant-network:
+    driver: bridge
